@@ -1,4 +1,5 @@
-# Tic Tac Toe: Human (X) vs Agent (O) using simple rules (no minimax)
+
+
 
 board = [" "] * 9
 
