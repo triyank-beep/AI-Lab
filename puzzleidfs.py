@@ -1,5 +1,4 @@
-# 8 Puzzle using Iterative Deepening DFS (IDDFS)
-# 0 = blank tile
+ 
 
 start = [1, 2, 3,
          4, 0, 6,
