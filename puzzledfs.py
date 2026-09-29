@@ -1,5 +1,4 @@
-# 8 Puzzle using DFS (depth limited so it doesn't go on forever)
-# 0 = blank tile
+
 
 start = [1, 2, 3,
          4, 0, 6,
