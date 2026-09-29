@@ -1,6 +1,10 @@
-# Tic Tac Toe: Human (X) vs Agent (O) using Minimax
+# Tic Tac Toe: Human (X) vs Agent (O) using simple rules (no minimax)
 
 board = [" "] * 9
+
+lines = [(0,1,2),(3,4,5),(6,7,8),
+         (0,3,6),(1,4,7),(2,5,8),
+         (0,4,8),(2,4,6)]
 
 def show():
     print()
@@ -11,9 +15,6 @@ def show():
     print()
 
 def winner():
-    lines = [(0,1,2),(3,4,5),(6,7,8),
-             (0,3,6),(1,4,7),(2,5,8),
-             (0,4,8),(2,4,6)]
     for a, b, c in lines:
         if board[a] != " " and board[a] == board[b] == board[c]:
             return board[a]
@@ -22,45 +23,29 @@ def winner():
 def full():
     return " " not in board
 
-# Minimax: agent (O) maximizes, human (X) minimizes
-def minimax(is_agent_turn):
-    w = winner()
-    if w == "O":
-        return 1
-    if w == "X":
-        return -1
-    if full():
-        return 0
-
-    if is_agent_turn:
-        best = -2
-        for i in range(9):
-            if board[i] == " ":
-                board[i] = "O"
-                best = max(best, minimax(False))
-                board[i] = " "
-        return best
-    else:
-        best = 2
-        for i in range(9):
-            if board[i] == " ":
-                board[i] = "X"
-                best = min(best, minimax(True))
-                board[i] = " "
-        return best
+# find a cell that completes a line for the given player
+def find_winning_move(player):
+    for a, b, c in lines:
+        cells = [board[a], board[b], board[c]]
+        if cells.count(player) == 2 and cells.count(" ") == 1:
+            for pos in (a, b, c):
+                if board[pos] == " ":
+                    return pos
+    return None
 
 def agent_move():
-    best_score = -2
-    best_pos = -1
-    for i in range(9):
-        if board[i] == " ":
-            board[i] = "O"
-            score = minimax(False)
-            board[i] = " "
-            if score > best_score:
-                best_score = score
-                best_pos = i
-    board[best_pos] = "O"
+    # 1. win if possible
+    pos = find_winning_move("O")
+    # 2. otherwise block the human
+    if pos is None:
+        pos = find_winning_move("X")
+    # 3. otherwise take center, then corners, then sides
+    if pos is None:
+        for p in [4, 0, 2, 6, 8, 1, 3, 5, 7]:
+            if board[p] == " ":
+                pos = p
+                break
+    board[pos] = "O"
 
 def human_move():
     while True:
