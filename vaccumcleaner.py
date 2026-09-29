@@ -1,8 +1,6 @@
-# Vacuum Cleaner World (2 rooms: A and B)
-# Simple reflex agent: if room is dirty -> clean it, else move to the other room
-
-location = "A"                      # starting room
-rooms = {"A": "Dirty", "B": "Dirty"}   # "Dirty" or "Clean"
+ 
+location = "A"                      
+rooms = {"A": "Dirty", "B": "Dirty"}  
 
 print("Initial state:", rooms, "| Vacuum in room", location)
 print()
