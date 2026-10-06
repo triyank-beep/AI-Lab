@@ -1,6 +1,10 @@
 import heapq
 
 def manhattan_distance(state, goal_state):
+    """
+    Calculates the sum of absolute horizontal and vertical distances 
+    of each tile from its correct goal position.
+    """
     distance = 0
     for i in range(9):
         val = state[i]
@@ -27,7 +31,7 @@ def get_neighbors(state):
             
     return neighbors
 
-def solve_8_puzzle(start_state, goal_state=(1,2,3,8,0,4,7,6,5)):
+def solve_8_puzzle(start_state, goal_state):
     # Priority queue stores tuples: (f_score, g_score, state, path)
     open_list = []
     h_init = manhattan_distance(start_state, goal_state)
@@ -58,21 +62,48 @@ def solve_8_puzzle(start_state, goal_state=(1,2,3,8,0,4,7,6,5)):
                 
     return None
 
-# Example initial state (0 represents the blank space)
-# Solvable configuration:
-initial_board =  (2,8,3,
-                  1,6,4,
-                  0,7,5)
+def get_user_board_input(prompt_text):
+    """Safely collects and processes a 9-digit sequence from user input."""
+    while True:
+        try:
+            print(prompt_text)
+            user_input = input("Numbers: ")
+            # Clean and split elements by spaces or commas
+            cleaned_input = user_input.replace(",", " ").split()
+            
+            # Map strings to integers
+            board_tuple = tuple(int(x) for x in cleaned_input)
+            
+            if len(board_tuple) != 9:
+                print("Error: You must enter exactly 9 numbers (0 through 8).\n")
+                continue
+            if set(board_tuple) != set(range(9)):
+                print("Error: Must contain unique numbers from 0 to 8 (where 0 is blank).\n")
+                continue
+                
+            return board_tuple
+        except ValueError:
+            print("Error: Please input valid integers only.\n")
 
-solution_path = solve_8_puzzle(initial_board)
+# --- Interactive Main Loop ---
+if __name__ == "__main__":
+    print("=== Interactive A* 8-Puzzle Solver (Manhattan Distance) ===")
+    print("Provide 9 digits separated by spaces. Example: 2 8 3 1 6 4 0 7 5\n")
+    
+    # Accept dynamic inputs from terminal
+    initial_board = get_user_board_input("Enter the INITIAL board configuration:")
+    target_board = get_user_board_input("\nEnter the GOAL board configuration:")
+    
+    solution_path = solve_8_puzzle(initial_board, target_board)
 
-if solution_path:
-    print(f"Total steps to solve: {len(solution_path) - 1}")
-    for step, board in enumerate(solution_path):
-        print(f"Step {step}:")
-        print(board[0:3])
-        print(board[3:6])
-        print(board[6:9])
-        print()
-else:
-    print("No solution found.")
+    print("\n--- Output Summary ---")
+    if solution_path:
+        print(f"🎯 Solved Successfully! Total steps to solve: {len(solution_path) - 1}\n")
+        for step, board in enumerate(solution_path):
+            print(f"Step {step}:")
+            print(f"  {board[0:3]}")
+            print(f"  {board[3:6]}")
+            print(f"  {board[6:9]}")
+            print("-" * 15)
+    else:
+        print("❌ No solution found. This layout configuration is unreachable.")
